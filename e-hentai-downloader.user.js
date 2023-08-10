@@ -50,17 +50,22 @@ document.addEventListener('mousemove', e => {
 
 document.addEventListener('keydown', e => {
 	if (e.key === 'e') { // Change to the desired key
-		var thumb = document.elementFromPoint(coordX, coordY).parentElement
-		var pageNumber = thumb.href.split('-')[1];
-		var pageIndex = pages.indexOf(pageNumber);
-		if (pageIndex === -1) {
-			pages.push(pageNumber);
-			thumb.parentElement.style.background = '#fff1';
-		} else {
-			pages.splice(pageIndex, 1);
-			thumb.parentElement.style.background = '#fff0';
+		try {
+			var thumb = document.elementFromPoint(coordX, coordY).parentElement;
+			var pageNumber = thumb.href.split('-').pop();
+			var pageIndex = pages.indexOf(pageNumber);
+			if (pageIndex === -1) {
+				pages.push(pageNumber);
+				thumb.parentElement.style.background = '#fff1';
+			} else {
+				pages.splice(pageIndex, 1);
+				thumb.parentElement.style.background = '#fff0';
+			}
+			document.querySelector('.ehD-box .g2 a label input[type="text"]').value = [...new Set(pages)].sort().join(", ");
+		} catch (error) {
+			// Handle the error here
+			console.error('An error occurred:', error);
 		}
-		document.querySelector('.ehD-box .g2 a label input[type="text"]').value = [...new Set(pages)].sort().join(", ");
 	}
 });
 
