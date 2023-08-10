@@ -38,7 +38,7 @@
 
 //Hotkey to add pages to the download range, press "e" (by default) when hovering over a page thumbnail.
 
-var pages = [];
+var pages = []; // Example array
 var coordX, coordY;
 document.addEventListener('mousemove', e => {
 	coordX = e.clientX;
@@ -83,7 +83,7 @@ document.addEventListener('keydown', e => {
 				pages.splice(pageIndex, 1);
 				thumb.parentElement.style.background = '#fff0';
 			}
-			document.querySelector('.ehD-box .g2 a label input[type="text"]').value = convertToRanges(pages.sort());
+			document.querySelector('.ehD-box .g2 a label input[type="text"]').value = convertToRanges(pages.sort(function (a, b) {return a - b;}));
 		} catch (error) {
 			// Handle the error here
 		}
