@@ -40,7 +40,6 @@
 
 var pages = [];
 var coordX, coordY;
-
 document.addEventListener('mousemove', e => {
 	coordX = e.clientX;
 	coordY = e.clientY;
@@ -48,11 +47,34 @@ document.addEventListener('mousemove', e => {
 	passive: true
 });
 
+function convertToRanges(arr) {
+	const ranges = [];
+	let start = arr[0];
+	let end = arr[0];
+	for (let i = 1; i < arr.length; i++) {
+		if (arr[i] === end + 1) {
+			end = arr[i];
+		} else {
+			if (start === end) {
+				ranges.push([start]);
+			} else {
+				ranges.push([start + "-" + end]);
+			}
+			start = end = arr[i];
+		}
+	}
+	if (start === end) {
+		ranges.push([start]);
+	} else {
+		ranges.push([start + "-" + end]);
+	}
+	return ranges.join(", ");
+}
 document.addEventListener('keydown', e => {
 	if (e.key === 'e') { // Change to the desired key
 		try {
 			var thumb = document.elementFromPoint(coordX, coordY).parentElement;
-			var pageNumber = thumb.href.split('-').pop();
+			var pageNumber = parseInt(thumb.href.split('-').pop());
 			var pageIndex = pages.indexOf(pageNumber);
 			if (pageIndex === -1) {
 				pages.push(pageNumber);
@@ -61,10 +83,9 @@ document.addEventListener('keydown', e => {
 				pages.splice(pageIndex, 1);
 				thumb.parentElement.style.background = '#fff0';
 			}
-			document.querySelector('.ehD-box .g2 a label input[type="text"]').value = [...new Set(pages)].sort().join(", ");
+			document.querySelector('.ehD-box .g2 a label input[type="text"]').value = convertToRanges(pages.sort());
 		} catch (error) {
 			// Handle the error here
-			console.error('An error occurred:', error);
 		}
 	}
 });
