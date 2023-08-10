@@ -36,6 +36,35 @@
 
 'use strict';
 
+//Hotkey to add pages to the download range, press "e" (by default) when hovering over a page thumbnail.
+
+var pages = [];
+var coordX, coordY;
+
+document.addEventListener('mousemove', e => {
+	coordX = e.clientX;
+	coordY = e.clientY;
+}, {
+	passive: true
+});
+
+document.addEventListener('keydown', e => {
+	if (e.key === 'e') { // Change to the desired key
+		var thumb = document.elementFromPoint(coordX, coordY).parentElement
+		var pageNumber = thumb.href.split('-')[1];
+		var pageIndex = pages.indexOf(pageNumber);
+		if (pageIndex === -1) {
+			pages.push(pageNumber);
+			thumb.parentElement.style.background = '#fff1';
+		} else {
+			pages.splice(pageIndex, 1);
+			thumb.parentElement.style.background = '#fff0';
+		}
+		document.querySelector('.ehD-box .g2 a label input[type="text"]').value = [...new Set(pages)].sort().join(", ");
+	}
+});
+
+
 console.log('[EHD] E-Hentai Downloader is running.');
 console.log('[EHD] Bugs Report >', 'https://github.com/ccloli/E-Hentai-Downloader/issues | https://greasyfork.org/scripts/10379-e-hentai-downloader/feedback');
 console.log('[EHD] To report a bug, it\'s recommended to provide the logs started with "[EHD]", thanks. =w=');
