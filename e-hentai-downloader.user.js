@@ -70,19 +70,25 @@ function convertToRanges(arr) {
 	}
 	return ranges.join(", ");
 }
+
 document.addEventListener('keydown', e => {
 	if (e.key === 'e') { // Change to the desired key
 		try {
+            if (sessionStorage["Clear"] == 1){
+                pages = [];
+                sessionStorage["Clear"] = 0;
+            }
 			var thumb = document.elementFromPoint(coordX, coordY).parentElement;
 			var pageNumber = parseInt(thumb.href.split('-').pop());
 			var pageIndex = pages.indexOf(pageNumber);
 			if (pageIndex === -1) {
 				pages.push(pageNumber);
-				thumb.parentElement.style.background = '#fff1';
+				thumb.parentElement.style.background = '#0005';
 			} else {
 				pages.splice(pageIndex, 1);
-				thumb.parentElement.style.background = '#fff0';
+				thumb.parentElement.style.background = '#0000';
 			}
+            sessionStorage[window.location.toString().split('/g/').pop().split('/')[0]] = JSON.stringify(pages)
 			document.querySelector('.ehD-box .g2 a label input[type="text"]').value = convertToRanges(pages.sort(function (a, b) {return a - b;}));
 		} catch (error) {
 			// Handle the error here
@@ -1167,7 +1173,7 @@ exports.generateWorker = function (zip, options, comment) {
  * @constructor
  */
 function JSZip() {
-    // if this constructor is used without `new`, it adds `new` before itself:
+    // if this constructor is used without `new`, it adds `new` before itself:
     if(!(this instanceof JSZip)) {
         return new JSZip();
     }
@@ -12254,7 +12260,7 @@ var ehDownloadStyle = '\
 		60% { -webkit-transform: translateX(15%) scaleX(0.7); transform: translateX(15%) scaleX(0.7); } \
 		to { -webkit-transform: translateX(50%) scaleX(0); transform: translateX(50%) scaleX(0); } \
 	} \
-	.ehD-box { margin: 20px auto; width: 732px; box-sizing: border-box; font-size: 12px; border: 1px groove #000000; }\
+	.ehD-box { margin: 20px auto; width: max-content; box-sizing: border-box; font-size: 12px; border: 1px groove #000000; }\
 	.ehD-box a { cursor: pointer; }\
 	.ehD-box .g2 { display: inline-block; margin: 10px; padding: 0; line-height: 14px; }\
 	.ehD-box legend { font-weight: 700; padding: 0 10px; } \
@@ -14875,6 +14881,11 @@ ehDownloadRange.className = 'g2';
 ehDownloadRange.innerHTML = ehDownloadArrow + ' <a><label title="Download ranges of pages, split each range with comma (,)&#13;Example: &#13;-10:   Download from page 1 to 10&#13;12:   Download page 12&#13;14-20:   Download from page 14 to 20&#13;27:   Download page 27&#13;30-40/2:   Download each 2 pages in 30-40 (30, 32, 34, 36, 38, 40)&#13;50-60/3:   Download each 3 pages in 50-60 (50, 53, 56, 59)&#13;70-:   Download from page 70 to the last page">Pages Range <input type="text" placeholder="eg. -10,12,14-20,27,30-40/2,50-60/3,70-"></label></a>';
 ehDownloadBox.appendChild(ehDownloadRange);
 
+var ehDownloadClear = document.createElement('div');
+ehDownloadClear.className = 'g2';
+ehDownloadClear.innerHTML = ehDownloadArrow + ' <button onclick="sessionStorage[window.location.toString().split(\'/g/\').pop().split(\'/\')[0]] = \'\'; document.querySelector(\'.ehD-box .g2 a label input[type=&quot;text&quot;]\').value = \'\'; sessionStorage[\'Clear\'] = 1;">Clear</button>';
+ehDownloadBox.appendChild(ehDownloadClear);
+
 var ehDownloadSetting = document.createElement('div');
 ehDownloadSetting.className = 'g2';
 ehDownloadSetting.innerHTML = ehDownloadArrow + ' <a>Settings</a>';
@@ -14885,6 +14896,11 @@ ehDownloadSetting.addEventListener('click', function(event){
 ehDownloadBox.appendChild(ehDownloadSetting);
 
 document.body.insertBefore(ehDownloadBox, document.getElementById('asm') || document.querySelector('.gm').nextElementSibling);
+
+try { //Load page range from Session Storage
+    pages = JSON.parse(sessionStorage[window.location.toString().split('/g/').pop().split('/')[0]])
+    document.querySelector('.ehD-box .g2 a label input[type="text"]').value = convertToRanges(pages.sort(function (a, b) {return a - b;}));
+}catch (error) {}
 
 var ehDownloadDialog = document.createElement('div');
 ehDownloadDialog.className = 'ehD-dialog';
@@ -14994,3 +15010,4 @@ window.onbeforeunload = unsafeWindow.onbeforeunload = function(){
 	}
 	clearRubbish();
 };
+
