@@ -14885,7 +14885,7 @@ ehDownloadBox.appendChild(ehDownloadRange);
 
 var ehDownloadClear = document.createElement('div');
 ehDownloadClear.className = 'g2';
-ehDownloadClear.innerHTML = ehDownloadArrow + '<button onclick="sessionStorage[window.location.toString().split(\'/g/\').pop().split(\'/\')[0]] = \'\'; document.querySelector(\'.ehD-box .g2 a label input[type=&quot;text&quot;]\').value = \'\'; sessionStorage[\'Clear\'] = 1; document.querySelectorAll(\'.selection\').forEach(element => { element.classList.remove(\'selection\'); });">Clear</button>';
+ehDownloadClear.innerHTML = ehDownloadArrow + ' <button style="text-decoration: none; font-weight: bold; font-family: arial,helvetica,sans-serif; font-size: 12px; padding: unset; cursor:pointer; color: #EEE; background: unset; border: unset;" onclick="sessionStorage[window.location.toString().split(\'/g/\').pop().split(\'/\')[0]] = \'\'; document.querySelector(\'.ehD-box .g2 a label input[type=&quot;text&quot;]\').value = \'\'; sessionStorage[\'Clear\'] = 1; document.querySelectorAll(\'.selection\').forEach(element => { element.classList.remove(\'selection\'); });">Clear</button>';
 ehDownloadBox.appendChild(ehDownloadClear);
 
 var ehDownloadSetting = document.createElement('div');
