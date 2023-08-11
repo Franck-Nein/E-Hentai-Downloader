@@ -38,6 +38,7 @@
 
 //Hotkey to add pages to the download range, press "e" (by default) when hovering over a page thumbnail.
 
+document.head.innerHTML += '<style>.selection{background: #0005;}</style>'
 var pages = []; // Example array
 var coordX, coordY;
 document.addEventListener('mousemove', e => {
@@ -83,11 +84,12 @@ document.addEventListener('keydown', e => {
 			var pageIndex = pages.indexOf(pageNumber);
 			if (pageIndex === -1) {
 				pages.push(pageNumber);
-				thumb.parentElement.style.background = '#0005';
+		//		thumb.parentElement.style.background = '#0005';
 			} else {
 				pages.splice(pageIndex, 1);
-				thumb.parentElement.style.background = '#0000';
+		//		thumb.parentElement.style.background = '#0000';
 			}
+            thumb.parentElement.classList.toggle("selection");
             sessionStorage[window.location.toString().split('/g/').pop().split('/')[0]] = JSON.stringify(pages)
 			document.querySelector('.ehD-box .g2 a label input[type="text"]').value = convertToRanges(pages.sort(function (a, b) {return a - b;}));
 		} catch (error) {
@@ -14883,7 +14885,7 @@ ehDownloadBox.appendChild(ehDownloadRange);
 
 var ehDownloadClear = document.createElement('div');
 ehDownloadClear.className = 'g2';
-ehDownloadClear.innerHTML = ehDownloadArrow + ' <button onclick="sessionStorage[window.location.toString().split(\'/g/\').pop().split(\'/\')[0]] = \'\'; document.querySelector(\'.ehD-box .g2 a label input[type=&quot;text&quot;]\').value = \'\'; sessionStorage[\'Clear\'] = 1;">Clear</button>';
+ehDownloadClear.innerHTML = ehDownloadArrow + '<button onclick="sessionStorage[window.location.toString().split(\'/g/\').pop().split(\'/\')[0]] = \'\'; document.querySelector(\'.ehD-box .g2 a label input[type=&quot;text&quot;]\').value = \'\'; sessionStorage[\'Clear\'] = 1; document.querySelectorAll(\'.selection\').forEach(element => { element.classList.remove(\'selection\'); });">Clear</button>';
 ehDownloadBox.appendChild(ehDownloadClear);
 
 var ehDownloadSetting = document.createElement('div');
@@ -14900,7 +14902,13 @@ document.body.insertBefore(ehDownloadBox, document.getElementById('asm') || docu
 try { //Load page range from Session Storage
     pages = JSON.parse(sessionStorage[window.location.toString().split('/g/').pop().split('/')[0]])
     document.querySelector('.ehD-box .g2 a label input[type="text"]').value = convertToRanges(pages.sort(function (a, b) {return a - b;}));
+
 }catch (error) {}
+document.querySelectorAll('.gdtl a').forEach(element => {
+  if (pages.indexOf(parseInt(element.href.split('-').pop())) !== -1) {
+  element.parentElement.classList.toggle("selection");
+}
+});
 
 var ehDownloadDialog = document.createElement('div');
 ehDownloadDialog.className = 'ehD-dialog';
