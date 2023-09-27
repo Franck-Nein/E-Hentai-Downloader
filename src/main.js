@@ -2611,11 +2611,11 @@ var getFileSizeAndLength = function() {
 	var sizeMB, sizeKB;
 	var page = pageText - 0;
 
-	if (sizeText.indexOf('MB') >= 0) {
+	if (/Mi?B/.test(sizeText)) {
 		sizeMB = parseFloat(sizeText) + 0.01;
 		sizeKB = sizeMB * 1024;
 	}
-	else if (sizeText.indexOf('GB') >= 0) {
+	else if (/Gi?B/.test(sizeText)) {
 		sizeMB = (parseFloat(sizeText) + 0.01) * 1024;
 		sizeKB = sizeMB * 1024;
 	}
@@ -2726,8 +2726,8 @@ function showPreCalcCost(){
 	var size = info.size;
 	var page = info.page;
 	var perCost = resolutionCost[resolutionSetting.resolution || 0];
-	if (resolutionSetting.withoutHentaiAtHome) {
-		perCost += 5;
+	if ((resolutionSetting.withoutHentaiAtHome || 0) > 1) {
+		perCost += 10;
 	}
 	var leastCost = page * perCost;
 		// 1 point per 0.1 MB since August 2019, less than 0.1 MB will also be counted, so asumme each image size has the extra < 100 KB
